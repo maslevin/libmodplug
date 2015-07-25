@@ -35,21 +35,21 @@ static inline UINT ConvertVolParam(UINT value)
 }
 
 WORD readWord(void* addr) {
-	if (addr % 2 == 0) {
+	if (((unsigned long)addr % 2) == 0) {
 		return ((WORD*)addr);
 	} else {
-		return (((*((CHAR*)lpStream + dwMemPos)) << 8) | (*((CHAR*)lpStream + dwMemPos + 1)));
+		return (((*((CHAR*)addr)) << 8) | (*((CHAR*)addr + 1)));
 	}
 }
 
 DWORD readDWord(void* addr) {
-	if (addr % 2 = 0) {
+	if (((unsigned long)addr % 2) == 0) {
 		return ((DWORD*)addr);
 	} else {
-		return (((*((CHAR*)lpStream + dwMemPos)) << 24) | 
-			    ((*((CHAR*)lpStream + dwMemPos + 1)) << 16) |
-			    ((*((CHAR*)lpStream + dwMemPos + 2)) << 8) |
-			    ((*((CHAR*)lpStream + dwMemPos + 3))));
+		return (((*((CHAR*)addr)) << 24) | 
+			    ((*((CHAR*)addr + 1)) << 16) |
+			    ((*((CHAR*)addr + 2)) << 8) |
+			    ((*((CHAR*)addr + 3))));
 	}
 }
 
