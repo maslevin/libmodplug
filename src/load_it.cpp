@@ -282,7 +282,15 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 	if (dwMemPos + 2 < dwMemLength)
 	{
 		printf("lpStream: %X offset: %u\n", lpStream, dwMemPos);
-		UINT nflt = bswapLE16(*((WORD *)(lpStream + dwMemPos)));
+		WORD value;
+		if (dwMemPos % 2 != 0) {
+			value = (*((CHAR*)lpStream + dwMemPos)) << 8;
+			value |= (*((CHAR*)lpStream + dwMemPos + 1));
+			printf("value: %u\n", value);
+		} else {
+			value = bswapLE16(*((WORD *)(lpStream + dwMemPos)));
+		}
+		UINT nflt = 
 		printf("nflt = %u\n", nflt);
 		dwMemPos += 2;
 		if (dwMemPos + nflt * 8 < dwMemLength) dwMemPos += nflt * 8;
