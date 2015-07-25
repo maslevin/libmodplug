@@ -4,7 +4,7 @@
  * Authors: Olivier Lapicque <olivierl@jps.net>
 */
 
-#include "stdafx.h"
+#include "libmodplug/stdafx.h"
 #include <stdlib.h>
 #include "sndfile.h"
 #include "tables.h"
