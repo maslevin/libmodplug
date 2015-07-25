@@ -9,8 +9,8 @@
  * Retrieves the offset, size and object type directly from umx.
 */
 
-#include "stdafx.h"
-#include "sndfile.h"
+#include "libmodplug/stdafx.h"
+#include "libmodplug/sndfile.h"
 
 
 typedef LONG fci_t;		/* FCompactIndex */

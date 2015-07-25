@@ -8,6 +8,7 @@
 #include "libmodplug/sndfile.h"
 #include "tables.h"
 
+
 #ifdef MODPLUG_TRACKER
 #define ENABLE_STEREOVU
 #endif

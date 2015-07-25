@@ -4,9 +4,9 @@
  * Authors: Kenton Varda <temporal@gauge3d.org> (C interface wrapper)
  */
 
-#include "stdafx.h"
+#include "libmodplug/stdafx.h"
 #include "modplug.h"
-#include "sndfile.h"
+#include "libmodplug/sndfile.h"
 
 struct _ModPlugFile
 {

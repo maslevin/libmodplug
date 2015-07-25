@@ -34,8 +34,8 @@
 #include <unistd.h> // for sleep
 #endif // _WIN32
 
-#include "stdafx.h"
-#include "sndfile.h"
+#include "libmodplug/stdafx.h"
+#include "libmodplug/sndfile.h"
 
 #include "load_pat.h"
 

@@ -41,8 +41,8 @@
 #define PATH_MAX 256
 #endif
 
-#include "stdafx.h"
-#include "sndfile.h"
+#include "libmodplug/stdafx.h"
+#include "libmodplug/sndfile.h"
 
 #include "load_pat.h"
 

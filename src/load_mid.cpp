@@ -33,8 +33,8 @@
 #include <unistd.h> // for sleep
 #endif
 
-#include "stdafx.h"
-#include "sndfile.h"
+#include "libmodplug/stdafx.h"
+#include "libmodplug/sndfile.h"
 #define PAN_LEFT    0x30
 #define PAN_RIGHT   0xD0
 #define MAX_POLYPHONY 16  // max notes in one midi channel
