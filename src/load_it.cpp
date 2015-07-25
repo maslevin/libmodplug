@@ -282,14 +282,17 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 	if (dwMemPos + 2 < dwMemLength)
 	{
 		UINT nflt = bswapLE16(*((WORD *)(lpStream + dwMemPos)));
+		printf("nflt = %u\n", nflt);
 		dwMemPos += 2;
 		if (dwMemPos + nflt * 8 < dwMemLength) dwMemPos += nflt * 8;
 	}
+	printf("rit16.5\n");
 	// Reading Midi Output & Macros
 	if (m_dwSongFlags & SONG_EMBEDMIDICFG)
 	{
 		if (dwMemPos + sizeof(MODMIDICFG) < dwMemLength)
 		{
+			printf("m_MidiCfg: %X offset: %X sizeof: %u\n", &m_MidiCfg, lpStream+dwMemPos, sizeof(MODMIDICFG));
 			memcpy(&m_MidiCfg, lpStream+dwMemPos, sizeof(MODMIDICFG));
 			dwMemPos += sizeof(MODMIDICFG);
 		}
