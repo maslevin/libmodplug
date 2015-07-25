@@ -290,7 +290,7 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 		} else {
 			value = bswapLE16(*((WORD *)(lpStream + dwMemPos)));
 		}
-		UINT nflt = 
+		UINT nflt = value;
 		printf("nflt = %u\n", nflt);
 		dwMemPos += 2;
 		if (dwMemPos + nflt * 8 < dwMemLength) dwMemPos += nflt * 8;
