@@ -376,8 +376,8 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 	{
 		memset(chnmask, 0, sizeof(chnmask));
 		if ((!patpos[patchk]) || ((DWORD)patpos[patchk] >= dwMemLength - 4)) continue;
-		UINT len = bswapLE16(*((WORD *)(lpStream+patpos[patchk])));
-		UINT rows = bswapLE16(*((WORD *)(lpStream+patpos[patchk]+2)));
+		UINT len = bswapLE16(readWord((void*)(lpStream+patpos[patchk])));
+		UINT rows = bswapLE16(readWord((void*)(lpStream+patpos[patchk]+2)));
 		if ((rows < 4) || (rows > 256)) continue;
 		if (8+len > dwMemLength || patpos[patchk] > dwMemLength - (8+len)) continue;
 		UINT i = 0;
@@ -511,8 +511,8 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 			continue;
 		}
 
-		UINT len = bswapLE16(*((WORD *)(lpStream+patpos[npat])));
-		UINT rows = bswapLE16(*((WORD *)(lpStream+patpos[npat]+2)));
+		UINT len = bswapLE16(readWord((void*)(lpStream+patpos[npat])));
+		UINT rows = bswapLE16(readWord((void*)(lpStream+patpos[npat]+2)));
 		if ((rows < 4) || (rows > 256)) continue;
 		if (8+len > dwMemLength || patpos[npat] > dwMemLength - (8+len)) continue;
 		PatternSize[npat] = rows;
