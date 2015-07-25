@@ -36,7 +36,7 @@ static inline UINT ConvertVolParam(UINT value)
 
 WORD readWord(void* addr) {
 	if (((unsigned long)addr % 2) == 0) {
-		return ((WORD*)addr);
+		return *((WORD*)addr);
 	} else {
 		return (((*((CHAR*)addr)) << 8) | (*((CHAR*)addr + 1)));
 	}
@@ -44,7 +44,7 @@ WORD readWord(void* addr) {
 
 DWORD readDWord(void* addr) {
 	if (((unsigned long)addr % 2) == 0) {
-		return ((DWORD*)addr);
+		return *((DWORD*)addr);
 	} else {
 		return (((*((CHAR*)addr)) << 24) | 
 			    ((*((CHAR*)addr + 1)) << 16) |
@@ -307,7 +307,7 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 			value |= (*((CHAR*)lpStream + dwMemPos + 1));
 			printf("value: %u\n", value);
 		} else {
-			value = bswapLE16(readWord(lpStream + dwMemPos));
+			value = bswapLE16(readWord((void*)(lpStream + dwMemPos)));
 		}
 		UINT nflt = value;
 		printf("nflt = %u\n", nflt);
@@ -327,7 +327,7 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 	}
 	printf("rit17\n");	
 	// Read pattern names: "PNAM"
-	if ((dwMemPos + 8 < dwMemLength) && (bswapLE32(readDWord(lpStream + dwMemPos)) == 0x4d414e50))
+	if ((dwMemPos + 8 < dwMemLength) && (bswapLE32(readDWord((void*)(lpStream + dwMemPos))) == 0x4d414e50))
 	{
 		UINT len = bswapLE32(*((DWORD *)(lpStream+dwMemPos+4)));
 		dwMemPos += 8;
@@ -346,7 +346,7 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 	// 4-channels minimum
 	m_nChannels = 4;
 	// Read channel names: "CNAM"
-	if ((dwMemPos + 8 < dwMemLength) && (bswapLE32(readDWord(lpStream + dwMemPos)) == 0x4d414e43))
+	if ((dwMemPos + 8 < dwMemLength) && (bswapLE32(readDWord((void*)(lpStream + dwMemPos))) == 0x4d414e43))
 	{
 		UINT len = bswapLE32(*((DWORD *)(lpStream+dwMemPos+4)));
 		dwMemPos += 8;
