@@ -1527,13 +1527,13 @@ UINT CSoundFile::LoadMixPlugins(const void *pData, UINT nLen)
 		DWORD nPluginSize;
 		UINT nPlugin;
 
-		nPluginSize = bswapLE32(*(DWORD *)(p+nPos+4));
+		nPluginSize = bswapLE32(readDWord((void*)(p+nPos+4)));
 		if (nPluginSize > nLen-nPos-8) break;;
-		if ((bswapLE32(*(DWORD *)(p+nPos))) == 0x58464843)
+		if (bswapLE32(readDWord((void*)(p+nPos))) == 0x58464843)
 		{
 			for (UINT ch=0; ch<64; ch++) if (ch*4 < nPluginSize)
 			{
-				ChnSettings[ch].nMixPlugin = bswapLE32(*(DWORD *)(p+nPos+8+ch*4));
+				ChnSettings[ch].nMixPlugin = bswapLE32(readDWord((void*)p+nPos+8+ch*4));
 			}
 		} else
 		{
@@ -1545,7 +1545,7 @@ UINT CSoundFile::LoadMixPlugins(const void *pData, UINT nLen)
 			nPlugin = (p[nPos+2]-'0')*10 + (p[nPos+3]-'0');
 			if ((nPlugin < MAX_MIXPLUGINS) && (nPluginSize >= sizeof(SNDMIXPLUGININFO)+4))
 			{
-				DWORD dwExtra = bswapLE32(*(DWORD *)(p+nPos+8+sizeof(SNDMIXPLUGININFO)));
+				DWORD dwExtra = bswapLE32(readDWord((void*)p+nPos+8+sizeof(SNDMIXPLUGININFO)));
 				m_MixPlugins[nPlugin].Info = *(const SNDMIXPLUGININFO *)(p+nPos+8);
 				m_MixPlugins[nPlugin].Info.dwPluginId1 = bswapLE32(m_MixPlugins[nPlugin].Info.dwPluginId1);
 				m_MixPlugins[nPlugin].Info.dwPluginId2 = bswapLE32(m_MixPlugins[nPlugin].Info.dwPluginId2);
