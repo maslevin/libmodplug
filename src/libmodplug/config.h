@@ -131,12 +131,12 @@
    such a type exists and the standard includes do not define it. */
 #define uint8_t unsigned char
 
-#define BYTE unsigned char
+/*#define BYTE unsigned char
 #define WORD uint16
 #define DWORD uint32
 #define UINT unsigned int
 #define LONG integer
 #define LPCBYTE unsigned char*
-#define CHAR char
+#define CHAR char*/
 
 #define CONFIG_H_INCLUDED 1
