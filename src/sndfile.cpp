@@ -84,6 +84,7 @@ CSoundFile::~CSoundFile()
 BOOL CSoundFile::Create(LPCBYTE lpStream, DWORD dwMemLength)
 //----------------------------------------------------------
 {
+	printf("1\n");
 	int i;
 
 	m_nType = MOD_TYPE_NONE;
@@ -115,15 +116,25 @@ BOOL CSoundFile::Create(LPCBYTE lpStream, DWORD dwMemLength)
 	m_nMaxOrderPosition = 0;
 	m_lpszPatternNames = NULL;
 	m_lpszSongComments = NULL;
+	printf("2\n");	
 	memset(Ins, 0, sizeof(Ins));
+	printf("3\n");		
 	memset(ChnMix, 0, sizeof(ChnMix));
+	printf("4\n");		
 	memset(Chn, 0, sizeof(Chn));
+	printf("5\n");		
 	memset(Headers, 0, sizeof(Headers));
+	printf("6\n");		
 	memset(Order, 0xFF, sizeof(Order));
+	printf("7\n");		
 	memset(Patterns, 0, sizeof(Patterns));
+	printf("8\n");		
 	memset(m_szNames, 0, sizeof(m_szNames));
+	printf("9\n");		
 	memset(m_MixPlugins, 0, sizeof(m_MixPlugins));
+	printf("10\n");		
 	ResetMidiCfg();
+	printf("11\n");		
 	for (UINT npt=0; npt<MAX_PATTERNS; npt++) PatternSize[npt] = 64;
 	for (UINT nch=0; nch<MAX_BASECHANNELS; nch++)
 	{
@@ -132,6 +143,7 @@ BOOL CSoundFile::Create(LPCBYTE lpStream, DWORD dwMemLength)
 		ChnSettings[nch].dwFlags = 0;
 		ChnSettings[nch].szName[0] = 0;
 	}
+	printf("12\n");		
 	if (lpStream)
 	{
 #ifdef MMCMP_SUPPORT
@@ -173,6 +185,7 @@ BOOL CSoundFile::Create(LPCBYTE lpStream, DWORD dwMemLength)
 		}
 #endif
 	}
+	printf("13\n");		
 	// Adjust song names
 	for (i=0; i<MAX_SAMPLES; i++)
 	{
@@ -186,6 +199,7 @@ BOOL CSoundFile::Create(LPCBYTE lpStream, DWORD dwMemLength)
 			j--;
 		}
 	}
+	printf("14\n");		
 	// Adjust channels
 	for (i=0; i<MAX_BASECHANNELS; i++)
 	{
@@ -199,7 +213,7 @@ BOOL CSoundFile::Create(LPCBYTE lpStream, DWORD dwMemLength)
 	}
 	// Checking instruments
 	MODINSTRUMENT *pins = Ins;
-
+	printf("15\n");	
 	for (i=0; i<MAX_INSTRUMENTS; i++, pins++)
 	{
 		if (pins->pSample)
@@ -228,6 +242,7 @@ BOOL CSoundFile::Create(LPCBYTE lpStream, DWORD dwMemLength)
 		if (!pins->nSustainEnd) pins->uFlags &= ~CHN_SUSTAINLOOP;
 		if (pins->nGlobalVol > 64) pins->nGlobalVol = 64;
 	}
+	printf("16\n");		
 	// Check invalid instruments
 	while ((m_nInstruments > 0) && (!Headers[m_nInstruments])) 
 		m_nInstruments--;
@@ -246,6 +261,7 @@ BOOL CSoundFile::Create(LPCBYTE lpStream, DWORD dwMemLength)
 	m_nNextRow = 0;
 	m_nRow = 0;
 	m_nNextStartRow = 0;
+	printf("17\n");		
 	if ((m_nRestartPos >= MAX_ORDERS) || (Order[m_nRestartPos] >= MAX_PATTERNS)) m_nRestartPos = 0;
 	// Load plugins
 	if (gpMixPluginCreateProc)
