@@ -374,12 +374,12 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 	if (npatterns > MAX_PATTERNS) npatterns = MAX_PATTERNS;
 	for (UINT patchk=0; patchk<npatterns; patchk++)
 	{
-		printf("patch %u\n", patchk);
+//		printf("patch %u\n", patchk);
 		memset(chnmask, 0, sizeof(chnmask));
 		if ((!patpos[patchk]) || ((DWORD)patpos[patchk] >= dwMemLength - 4)) continue;
 		UINT len = bswapLE16(readWord((void*)(lpStream+patpos[patchk])));
 		UINT rows = bswapLE16(readWord((void*)(lpStream+patpos[patchk]+2)));
-		printf("len %u rows %u\n", len, rows);
+//		printf("len %u rows %u\n", len, rows);
 		if ((rows < 4) || (rows > 256)) continue;
 		if (8+len > dwMemLength || patpos[patchk] > dwMemLength - (8+len)) continue;
 		UINT i = 0;
