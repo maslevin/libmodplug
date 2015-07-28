@@ -1537,17 +1537,20 @@ UINT CSoundFile::LoadMixPlugins(const void *pData, UINT nLen)
 		DWORD nPluginSize;
 		UINT nPlugin;
 
+		printf("LoadMixPlugins 1\n");
 		nPluginSize = bswapLE32(readDWord((void*)(p+nPos+4)));
 		if (nPluginSize > nLen-nPos-8) break;
 		char* cPtr = (char*)(p+nPos);
 		if ((cPtr[0] == 'X') && (cPtr[1] == 'F') && (cPtr[2] == 'H') && (cPtr[3] == 'C'))
 		//if (bswapLE32(readDWord((void*)(p+nPos))) == 0x58464843)
 		{
+			printf("LoadMixPlugins 2a\n");							
 			for (UINT ch=0; ch<64; ch++) if (ch*4 < nPluginSize)
 			{
-				ChnSettings[ch].nMixPlugin = bswapLE32(readDWord((void*)p+nPos+8+ch*4));
+				ChnSettings[ch].nMixPlugin = bswapLE32(readDWord((void*)(p+nPos+8+ch*4)));
 			}
 		} else {
+			printf("LoadMixPlugins 2b\n");							
 			if ((p[nPos] != 'F') || (p[nPos+1] != 'X')
 			 || (p[nPos+2] < '0') || (p[nPos+3] < '0'))
 			{
@@ -1556,7 +1559,8 @@ UINT CSoundFile::LoadMixPlugins(const void *pData, UINT nLen)
 			nPlugin = (p[nPos+2]-'0')*10 + (p[nPos+3]-'0');
 			if ((nPlugin < MAX_MIXPLUGINS) && (nPluginSize >= sizeof(SNDMIXPLUGININFO)+4))
 			{
-				DWORD dwExtra = bswapLE32(readDWord((void*)p+nPos+8+sizeof(SNDMIXPLUGININFO)));
+				printf("LoadMixPlugins 3b\n");								
+				DWORD dwExtra = bswapLE32(readDWord((void*)(p+nPos+8+sizeof(SNDMIXPLUGININFO))));
 				m_MixPlugins[nPlugin].Info = *(const SNDMIXPLUGININFO *)(p+nPos+8);
 				m_MixPlugins[nPlugin].Info.dwPluginId1 = bswapLE32(m_MixPlugins[nPlugin].Info.dwPluginId1);
 				m_MixPlugins[nPlugin].Info.dwPluginId2 = bswapLE32(m_MixPlugins[nPlugin].Info.dwPluginId2);
