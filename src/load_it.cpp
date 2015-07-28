@@ -329,7 +329,7 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 	// Read pattern names: "PNAM"
 	if ((dwMemPos + 8 < dwMemLength) && (bswapLE32(readDWord((void*)(lpStream + dwMemPos))) == 0x4d414e50))
 	{
-		UINT len = bswapLE32(*((DWORD *)(lpStream+dwMemPos+4)));
+		UINT len = bswapLE32(readDWord((void*)(lpStream+dwMemPos+4)));
 		dwMemPos += 8;
 		if ((dwMemPos + len <= dwMemLength) && (len <= MAX_PATTERNS*MAX_PATTERNNAME) && (len >= MAX_PATTERNNAME))
 		{
@@ -348,7 +348,7 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 	// Read channel names: "CNAM"
 	if ((dwMemPos + 8 < dwMemLength) && (bswapLE32(readDWord((void*)(lpStream + dwMemPos))) == 0x4d414e43))
 	{
-		UINT len = bswapLE32(*((DWORD *)(lpStream+dwMemPos+4)));
+		UINT len = bswapLE32(readDWord((void*)(lpStream+dwMemPos+4)));
 		dwMemPos += 8;
 		if ((dwMemPos + len <= dwMemLength) && (len <= 64*MAX_CHANNELNAME))
 		{
