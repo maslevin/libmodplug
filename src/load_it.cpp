@@ -178,6 +178,7 @@ BOOL CSoundFile::ITInstrToMPT(const void *p, INSTRUMENTHEADER *penv, UINT trkver
 BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 //--------------------------------------------------------------
 {
+	printf("ReadIT 1\n");
 	DWORD dwMemPos = sizeof(ITFILEHEADER);
 	DWORD inspos[MAX_INSTRUMENTS];
 	DWORD smppos[MAX_SAMPLES];
@@ -185,6 +186,7 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 	BYTE chnmask[64], channels_used[64];
 	MODCOMMAND lastvalue[64];
 
+	printf("ReadIT 2\n");
 	if ((!lpStream) || (dwMemLength < sizeof(ITFILEHEADER))) return FALSE;
 	ITFILEHEADER pifh = *(ITFILEHEADER *)lpStream;
 	pifh.id = bswapLE32(pifh.id);
@@ -210,6 +212,7 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 	if (pifh.flags & 0x20) m_dwSongFlags |= SONG_ITCOMPATMODE;
 	if (pifh.flags & 0x80) m_dwSongFlags |= SONG_EMBEDMIDICFG;
 	if (pifh.flags & 0x1000) m_dwSongFlags |= SONG_EXFILTERRANGE;
+	printf("ReadIT 3\n");	
 	memcpy(m_szNames[0], pifh.songname, 26);
 	m_szNames[0][26] = 0;
 	// Global Volume
@@ -222,6 +225,8 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 	if (pifh.speed) m_nDefaultSpeed = pifh.speed;
 	if (pifh.tempo) m_nDefaultTempo = pifh.tempo;
 	m_nSongPreAmp = pifh.mv & 0x7F;
+
+	printf("ReadIT 4\n");	
 	// Reading Channels Pan Positions
 	for (int ipan=0; ipan<64; ipan++) if (pifh.chnpan[ipan] != 0xFF)
 	{
@@ -233,6 +238,8 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 		if (n == 100) ChnSettings[ipan].dwFlags |= CHN_SURROUND;
 	}
 	if (m_nChannels < 4) m_nChannels = 4;
+
+	printf("ReadIT 5\n");	
 	// Reading Song Message
 	if ((pifh.special & 0x01) && (pifh.msglength) && (pifh.msglength <= dwMemLength) && (pifh.msgoffset < dwMemLength - pifh.msglength))
 	{
@@ -243,11 +250,15 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 			m_lpszSongComments[pifh.msglength] = 0;
 		}
 	}
+
+	printf("ReadIT 6\n");	
 	// Reading orders
 	UINT nordsize = pifh.ordnum;
 	if (nordsize > MAX_ORDERS) nordsize = MAX_ORDERS;
 	memcpy(Order, lpStream+dwMemPos, nordsize);
 	dwMemPos += pifh.ordnum;
+
+	printf("ReadIT 7\n");	
 	// Reading Instrument Offsets
 	memset(inspos, 0, sizeof(inspos));
 	UINT inspossize = pifh.insnum;
@@ -259,6 +270,8 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 	       inspos[j] = bswapLE32(inspos[j]);
 	}
 	dwMemPos += pifh.insnum * 4;
+
+	printf("ReadIT 8\n");	
 	// Reading Samples Offsets
 	memset(smppos, 0, sizeof(smppos));
 	UINT smppossize = pifh.smpnum;
@@ -270,6 +283,8 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 	       smppos[j] = bswapLE32(smppos[j]);
 	}
 	dwMemPos += pifh.smpnum * 4;
+
+	printf("ReadIT 9\n");	
 	// Reading Patterns Offsets
 	memset(patpos, 0, sizeof(patpos));
 	UINT patpossize = pifh.patnum;
@@ -281,6 +296,8 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 	       patpos[j] = bswapLE32(patpos[j]);
 	}
 	dwMemPos += pifh.patnum * 4;
+
+	printf("ReadIT 10\n");	
 	// Reading IT Extra Info
 	if (dwMemPos + 2 < dwMemLength)
 	{
@@ -295,6 +312,8 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 		dwMemPos += 2;
 		if (dwMemPos + nflt * 8 < dwMemLength) dwMemPos += nflt * 8;
 	}
+
+	printf("ReadIT 11\n");		
 	// Reading Midi Output & Macros
 	if (m_dwSongFlags & SONG_EMBEDMIDICFG)
 	{
@@ -304,6 +323,8 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 			dwMemPos += sizeof(MODMIDICFG);
 		}
 	}
+
+	printf("ReadIT 12\n");		
 	// Read pattern names: "PNAM"
 	if ((dwMemPos + 8 < dwMemLength) && (bswapLE32(readDWord((void*)(lpStream + dwMemPos))) == 0x4d414e50))
 	{
@@ -320,8 +341,10 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 			dwMemPos += len;
 		}
 	}
+
 	// 4-channels minimum
 	m_nChannels = 4;
+	printf("ReadIT 13\n");		
 	// Read channel names: "CNAM"
 	if ((dwMemPos + 8 < dwMemLength) && (bswapLE32(readDWord((void*)(lpStream + dwMemPos))) == 0x4d414e43))
 	{
@@ -339,11 +362,15 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 			dwMemPos += len;
 		}
 	}
+
+	printf("ReadIT 14\n");		
 	// Read mix plugins information
 	if (dwMemPos + 8 < dwMemLength)
 	{
 		dwMemPos += LoadMixPlugins(lpStream+dwMemPos, dwMemLength-dwMemPos);
 	}
+
+	printf("ReadIT 15\n");		
 	// Checking for unused channels
 	UINT npatterns = pifh.patnum;
 	if (npatterns > MAX_PATTERNS) npatterns = MAX_PATTERNS;
@@ -390,7 +417,8 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 			if (i >= len) break;
 		}
 	}
-	printf("rit21\n");	
+
+	printf("ReadIT 16\n");	
 	// Reading Instruments
 	m_nInstruments = 0;
 	if (pifh.flags & 0x04) m_nInstruments = pifh.insnum;
@@ -406,7 +434,8 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 			ITInstrToMPT(lpStream + inspos[nins], penv, pifh.cmwt);
 		}
 	}
-	printf("rit22\n");	
+
+	printf("ReadIT 17\n");	
 	// Reading Samples
 	m_nSamples = pifh.smpnum;
 	if (m_nSamples >= MAX_SAMPLES) m_nSamples = MAX_SAMPLES-1;
@@ -474,9 +503,8 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 		}
 		memcpy(m_szNames[nsmp+1], pis.name, 26);
 	}
-	printf("rit23\n");
 
-	// Reading Patterns
+	printf("ReadIT 18\n");		// Reading Patterns
 	for (UINT npat=0; npat<npatterns; npat++)
 	{
 		if ((!patpos[npat]) || ((DWORD)patpos[npat] >= dwMemLength - 4))
@@ -605,7 +633,8 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 			}
 		}
 	}
-	printf("rit24\n");	
+
+	printf("ReadIT 19\n");	
 	for (UINT ncu=0; ncu<MAX_BASECHANNELS; ncu++)
 	{
 		if (ncu>=m_nChannels)
