@@ -328,13 +328,17 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 	// Read pattern names: "PNAM"
 	if ((dwMemPos + 8 < dwMemLength) && (bswapLE32(readDWord((void*)(lpStream + dwMemPos))) == 0x4d414e50))
 	{
+		printf("a\n");
 		UINT len = bswapLE32(readDWord((void*)(lpStream+dwMemPos+4)));
+		printf("b\n");		
 		dwMemPos += 8;
 		if ((dwMemPos + len <= dwMemLength) && (len <= MAX_PATTERNS*MAX_PATTERNNAME) && (len >= MAX_PATTERNNAME))
 		{
+		printf("c\n");			
 			m_lpszPatternNames = new char[len];
 			if (m_lpszPatternNames)
 			{
+		printf("d\n");				
 				m_nPatternNames = len / MAX_PATTERNNAME;
 				memcpy(m_lpszPatternNames, lpStream+dwMemPos, len);
 			}
