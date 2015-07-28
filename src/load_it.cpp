@@ -43,7 +43,7 @@ WORD readWord(void* addr) {
 }
 
 DWORD readDWord(void* addr) {
-	if (((unsigned long)addr % 2) == 0) {
+	if (((unsigned long)addr % 4) == 0) {
 		return *((DWORD*)addr);
 	} else {
 		return (((*((CHAR*)addr)) << 24) | 
@@ -1539,6 +1539,7 @@ UINT CSoundFile::LoadMixPlugins(const void *pData, UINT nLen)
 
 		printf("LoadMixPlugins 1\n");
 		nPluginSize = bswapLE32(readDWord((void*)(p+nPos+4)));
+		printf("nPluginSize: %u\n", nPluginSize);
 		if (nPluginSize > nLen-nPos-8) break;
 		char* cPtr = (char*)(p+nPos);
 		if ((cPtr[0] == 'X') && (cPtr[1] == 'F') && (cPtr[2] == 'H') && (cPtr[3] == 'C'))
