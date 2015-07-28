@@ -1538,15 +1538,16 @@ UINT CSoundFile::LoadMixPlugins(const void *pData, UINT nLen)
 		UINT nPlugin;
 
 		nPluginSize = bswapLE32(readDWord((void*)(p+nPos+4)));
-		if (nPluginSize > nLen-nPos-8) break;;
-		if (bswapLE32(readDWord((void*)(p+nPos))) == 0x58464843)
+		if (nPluginSize > nLen-nPos-8) break;
+		char* cPtr = (char*)(p+nPos);
+		if ((cPtr[0] == 'X') && (cPtr[1] == 'F') && (cPtr[2] == 'H') && (cPtr[3]) == 'C'))
+		//if (bswapLE32(readDWord((void*)(p+nPos))) == 0x58464843)
 		{
 			for (UINT ch=0; ch<64; ch++) if (ch*4 < nPluginSize)
 			{
 				ChnSettings[ch].nMixPlugin = bswapLE32(readDWord((void*)p+nPos+8+ch*4));
 			}
-		} else
-		{
+		} else {
 			if ((p[nPos] != 'F') || (p[nPos+1] != 'X')
 			 || (p[nPos+2] < '0') || (p[nPos+3] < '0'))
 			{
