@@ -326,7 +326,8 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 
 	printf("ReadIT 12\n");		
 	// Read pattern names: "PNAM"
-	if ((dwMemPos + 8 < dwMemLength) && (bswapLE32(readDWord((void*)(lpStream + dwMemPos))) == 0x4d414e50))
+	char* cPtr = (char*)(lpStream + dwMemPos);
+	if ((dwMemPos + 8 < dwMemLength) && (cPtr[0] == 'P') && (cPtr[1] == 'N') && (cPtr[2] == 'A') && (cPtr[3] == 'M'))
 	{
 		printf("a\n");
 		UINT len = bswapLE32(readDWord((void*)(lpStream+dwMemPos+4)));
@@ -348,9 +349,10 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 
 	// 4-channels minimum
 	m_nChannels = 4;
-	printf("ReadIT 13\n");		
+	printf("ReadIT 13\n");
+	cPtr = (char*)(lpStream + dwMemPos);
 	// Read channel names: "CNAM"
-	if ((dwMemPos + 8 < dwMemLength) && (bswapLE32(readDWord((void*)(lpStream + dwMemPos))) == 0x4d414e43))
+	if ((dwMemPos + 8 < dwMemLength) && (cPtr[0] == 'C') && (cPtr[1] == 'N') && (cPtr[2] == 'A') && (cPtr[3] == 'M'))
 	{
 		UINT len = bswapLE32(readDWord((void*)(lpStream+dwMemPos+4)));
 		dwMemPos += 8;
