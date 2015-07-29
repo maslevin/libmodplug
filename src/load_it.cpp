@@ -1292,7 +1292,7 @@ void ITUnpack8Bit(signed char *pSample, DWORD dwLen, LPBYTE lpMemFile, DWORD dwM
 		if (!wCount)
 		{
 			wCount = 0x8000;
-			wHdr = bswapLE16(*((LPWORD)pSrc));
+			wHdr = bswapLE16(readWord(pSrc));
 			pSrc += 2;
 			bLeft = 9;
 			bTemp = bTemp2 = 0;
@@ -1375,7 +1375,7 @@ void ITUnpack16Bit(signed char *pSample, DWORD dwLen, LPBYTE lpMemFile, DWORD dw
 		if (!wCount)
 		{
 			wCount = 0x4000;
-			wHdr = bswapLE16(*((LPWORD)pSrc));
+			wHdr = bswapLE16(readWord(pSrc));
 			pSrc += 2;
 			bLeft = 17;
 			wTemp = wTemp2 = 0;
@@ -1541,9 +1541,9 @@ UINT CSoundFile::LoadMixPlugins(const void *pData, UINT nLen)
 		nPluginSize = bswapLE32(readDWord((void*)(p+nPos+4)));
 		printf("nPluginSize: %u\n", nPluginSize);
 		if (nPluginSize > nLen-nPos-8) break;
-		char* cPtr = (char*)(p+nPos);
-		if ((cPtr[0] == 'X') && (cPtr[1] == 'F') && (cPtr[2] == 'H') && (cPtr[3] == 'C'))
-		//if (bswapLE32(readDWord((void*)(p+nPos))) == 0x58464843)
+		//char* cPtr = (char*)(p+nPos);
+		//if ((cPtr[0] == 'X') && (cPtr[1] == 'F') && (cPtr[2] == 'H') && (cPtr[3] == 'C'))
+		if (bswapLE32(readDWord((void*)(p+nPos))) == 0x58464843)
 		{
 			printf("LoadMixPlugins 2a\n");							
 			for (UINT ch=0; ch<64; ch++) if (ch*4 < nPluginSize)
