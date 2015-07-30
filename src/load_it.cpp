@@ -1379,6 +1379,7 @@ void ITUnpack16Bit(signed char *pSample, DWORD dwLen, LPBYTE lpMemFile, DWORD dw
 
 	while (dwLen)
 	{
+		printf("dwLen: %u\n", dwLen);
 		if (!wCount)
 		{
 			wCount = 0x4000;
@@ -1392,9 +1393,11 @@ void ITUnpack16Bit(signed char *pSample, DWORD dwLen, LPBYTE lpMemFile, DWORD dw
 		if (d > dwLen) d = dwLen;
 		// Unpacking
 		DWORD dwPos = 0;
+		printf("unpacking\n");
 		do
 		{
 			DWORD dwBits = ITReadBits(bitbuf, bitnum, pSrc, bLeft);
+			printf("dwBits 1: %u\n", dwBits);
 			if (bLeft < 7)
 			{
 				DWORD i = 1 << (bLeft-1);
@@ -1404,6 +1407,7 @@ void ITUnpack16Bit(signed char *pSample, DWORD dwLen, LPBYTE lpMemFile, DWORD dw
 				bLeft = ((BYTE)(dwBits & 0xFF) < bLeft) ? (BYTE)(dwBits & 0xFF) : (BYTE)((dwBits+1) & 0xFF);
 				goto Next;
 			}
+			printf("dwBits 2: %u\n", dwBits);			
 			if (bLeft < 17)
 			{
 				DWORD i = (0xFFFF >> (17 - bLeft)) + 8;
@@ -1413,6 +1417,7 @@ void ITUnpack16Bit(signed char *pSample, DWORD dwLen, LPBYTE lpMemFile, DWORD dw
 				bLeft = ((BYTE)(dwBits & 0xFF) < bLeft) ? (BYTE)(dwBits & 0xFF) : (BYTE)((dwBits+1) & 0xFF);
 				goto Next;
 			}
+			printf("dwBits 3: %u\n", dwBits);			
 			if (bLeft >= 18) goto SkipByte;
 			if (dwBits >= 0x10000)
 			{
@@ -1420,6 +1425,7 @@ void ITUnpack16Bit(signed char *pSample, DWORD dwLen, LPBYTE lpMemFile, DWORD dw
 				goto Next;
 			}
 		UnpackByte:
+			printf("dwBits 4: %u\n", dwBits);				
 			if (bLeft < 16)
 			{
 				BYTE shift = 16 - bLeft;
@@ -1428,6 +1434,7 @@ void ITUnpack16Bit(signed char *pSample, DWORD dwLen, LPBYTE lpMemFile, DWORD dw
 				dwBits = (DWORD)c;
 			}
 			dwBits += wTemp;
+			printf("dwBits 5: %u\n", dwBits);			
 			wTemp = (signed short)dwBits;
 			wTemp2 += wTemp;
 #ifdef IT215_SUPPORT
