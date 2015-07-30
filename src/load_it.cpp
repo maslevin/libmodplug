@@ -445,69 +445,76 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 	// Reading Samples
 	m_nSamples = pifh.smpnum;
 	if (m_nSamples >= MAX_SAMPLES) m_nSamples = MAX_SAMPLES-1;
-	for (UINT nsmp=0; nsmp<pifh.smpnum; nsmp++) if ((smppos[nsmp]) && (smppos[nsmp] <= dwMemLength - sizeof(ITSAMPLESTRUCT)))
+	for (UINT nsmp=0; nsmp<pifh.smpnum; nsmp++)
 	{
-		ITSAMPLESTRUCT pis = *(ITSAMPLESTRUCT *)(lpStream+smppos[nsmp]);
-		pis.id = bswapLE32(pis.id);
-		pis.length = bswapLE32(pis.length);
-		pis.loopbegin = bswapLE32(pis.loopbegin);
-		pis.loopend = bswapLE32(pis.loopend);
-		pis.C5Speed = bswapLE32(pis.C5Speed);
-		pis.susloopbegin = bswapLE32(pis.susloopbegin);
-		pis.susloopend = bswapLE32(pis.susloopend);
-		pis.samplepointer = bswapLE32(pis.samplepointer);
-
-		if (pis.id == 0x53504D49)
+		printf("Reading sample %i\n", nsmp);
+		if ((smppos[nsmp]) && (smppos[nsmp] <= dwMemLength - sizeof(ITSAMPLESTRUCT)))
 		{
-			MODINSTRUMENT *pins = &Ins[nsmp+1];
-			memcpy(pins->name, pis.filename, 12);
-			pins->uFlags = 0;
-			pins->nLength = 0;
-			pins->nLoopStart = pis.loopbegin;
-			pins->nLoopEnd = pis.loopend;
-			pins->nSustainStart = pis.susloopbegin;
-			pins->nSustainEnd = pis.susloopend;
-			pins->nC4Speed = pis.C5Speed;
-			if (!pins->nC4Speed) pins->nC4Speed = 8363;
-			if (pis.C5Speed < 256) pins->nC4Speed = 256;
-			pins->nVolume = pis.vol << 2;
-			if (pins->nVolume > 256) pins->nVolume = 256;
-			pins->nGlobalVol = pis.gvl;
-			if (pins->nGlobalVol > 64) pins->nGlobalVol = 64;
-			if (pis.flags & 0x10) pins->uFlags |= CHN_LOOP;
-			if (pis.flags & 0x20) pins->uFlags |= CHN_SUSTAINLOOP;
-			if (pis.flags & 0x40) pins->uFlags |= CHN_PINGPONGLOOP;
-			if (pis.flags & 0x80) pins->uFlags |= CHN_PINGPONGSUSTAIN;
-			pins->nPan = (pis.dfp & 0x7F) << 2;
-			if (pins->nPan > 256) pins->nPan = 256;
-			if (pis.dfp & 0x80) pins->uFlags |= CHN_PANNING;
-			pins->nVibType = autovibit2xm[pis.vit & 7];
-			pins->nVibRate = pis.vis;
-			pins->nVibDepth = pis.vid & 0x7F;
-			pins->nVibSweep = (pis.vir + 3) / 4;
-			if ((pis.samplepointer) && (pis.samplepointer < dwMemLength) && (pis.length))
+			ITSAMPLESTRUCT pis = *(ITSAMPLESTRUCT *)(lpStream+smppos[nsmp]);
+			pis.id = bswapLE32(pis.id);
+			pis.length = bswapLE32(pis.length);
+			pis.loopbegin = bswapLE32(pis.loopbegin);
+			pis.loopend = bswapLE32(pis.loopend);
+			pis.C5Speed = bswapLE32(pis.C5Speed);
+			pis.susloopbegin = bswapLE32(pis.susloopbegin);
+			pis.susloopend = bswapLE32(pis.susloopend);
+			pis.samplepointer = bswapLE32(pis.samplepointer);
+
+			printf("17.1\n");
+			if (pis.id == 0x53504D49)
 			{
-				pins->nLength = pis.length;
-				if (pins->nLength > MAX_SAMPLE_LENGTH) pins->nLength = MAX_SAMPLE_LENGTH;
-				UINT flags = (pis.cvt & 1) ? RS_PCM8S : RS_PCM8U;
-				if (pis.flags & 2)
+				MODINSTRUMENT *pins = &Ins[nsmp+1];
+				memcpy(pins->name, pis.filename, 12);
+				pins->uFlags = 0;
+				pins->nLength = 0;
+				pins->nLoopStart = pis.loopbegin;
+				pins->nLoopEnd = pis.loopend;
+				pins->nSustainStart = pis.susloopbegin;
+				pins->nSustainEnd = pis.susloopend;
+				pins->nC4Speed = pis.C5Speed;
+				if (!pins->nC4Speed) pins->nC4Speed = 8363;
+				if (pis.C5Speed < 256) pins->nC4Speed = 256;
+				pins->nVolume = pis.vol << 2;
+				if (pins->nVolume > 256) pins->nVolume = 256;
+				pins->nGlobalVol = pis.gvl;
+				if (pins->nGlobalVol > 64) pins->nGlobalVol = 64;
+				if (pis.flags & 0x10) pins->uFlags |= CHN_LOOP;
+				if (pis.flags & 0x20) pins->uFlags |= CHN_SUSTAINLOOP;
+				if (pis.flags & 0x40) pins->uFlags |= CHN_PINGPONGLOOP;
+				if (pis.flags & 0x80) pins->uFlags |= CHN_PINGPONGSUSTAIN;
+				pins->nPan = (pis.dfp & 0x7F) << 2;
+				if (pins->nPan > 256) pins->nPan = 256;
+				if (pis.dfp & 0x80) pins->uFlags |= CHN_PANNING;
+				pins->nVibType = autovibit2xm[pis.vit & 7];
+				pins->nVibRate = pis.vis;
+				pins->nVibDepth = pis.vid & 0x7F;
+				pins->nVibSweep = (pis.vir + 3) / 4;				
+				if ((pis.samplepointer) && (pis.samplepointer < dwMemLength) && (pis.length))
 				{
-					flags += 5;
-					if (pis.flags & 4) flags |= RSF_STEREO;
-					pins->uFlags |= CHN_16BIT;
-					// IT 2.14 16-bit packed sample ?
-					if (pis.flags & 8) flags = ((pifh.cmwt >= 0x215) && (pis.cvt & 4)) ? RS_IT21516 : RS_IT21416;
-				} else
-				{
-					if (pis.flags & 4) flags |= RSF_STEREO;
-					if (pis.cvt == 0xFF) flags = RS_ADPCM4; else
-					// IT 2.14 8-bit packed sample ?
-					if (pis.flags & 8)	flags =	((pifh.cmwt >= 0x215) && (pis.cvt & 4)) ? RS_IT2158 : RS_IT2148;
+					printf("17.2\n");					
+					pins->nLength = pis.length;
+					if (pins->nLength > MAX_SAMPLE_LENGTH) pins->nLength = MAX_SAMPLE_LENGTH;
+					UINT flags = (pis.cvt & 1) ? RS_PCM8S : RS_PCM8U;
+					if (pis.flags & 2)
+					{
+						printf("17.2.1\n");						
+						flags += 5;
+						if (pis.flags & 4) flags |= RSF_STEREO;
+						pins->uFlags |= CHN_16BIT;
+						// IT 2.14 16-bit packed sample ?
+						if (pis.flags & 8) flags = ((pifh.cmwt >= 0x215) && (pis.cvt & 4)) ? RS_IT21516 : RS_IT21416;
+					} else {
+						printf("17.2.2\n");						
+						if (pis.flags & 4) flags |= RSF_STEREO;
+						if (pis.cvt == 0xFF) flags = RS_ADPCM4; else
+						// IT 2.14 8-bit packed sample ?
+						if (pis.flags & 8)	flags =	((pifh.cmwt >= 0x215) && (pis.cvt & 4)) ? RS_IT2158 : RS_IT2148;
+					}
+					ReadSample(&Ins[nsmp+1], flags, (LPSTR)(lpStream+pis.samplepointer), dwMemLength - pis.samplepointer);
 				}
-				ReadSample(&Ins[nsmp+1], flags, (LPSTR)(lpStream+pis.samplepointer), dwMemLength - pis.samplepointer);
 			}
+			memcpy(m_szNames[nsmp+1], pis.name, 26);
 		}
-		memcpy(m_szNames[nsmp+1], pis.name, 26);
 	}
 
 	printf("ReadIT 18\n");		// Reading Patterns
@@ -1537,12 +1544,9 @@ UINT CSoundFile::LoadMixPlugins(const void *pData, UINT nLen)
 		DWORD nPluginSize;
 		UINT nPlugin;
 
-		printf("LoadMixPlugins 1\n");
 		nPluginSize = bswapLE32(readDWord((void*)(p+nPos+4)));
 		printf("nPluginSize: %u\n", nPluginSize);
 		if (nPluginSize > nLen-nPos-8) break;
-		//char* cPtr = (char*)(p+nPos);
-		//if ((cPtr[0] == 'X') && (cPtr[1] == 'F') && (cPtr[2] == 'H') && (cPtr[3] == 'C'))
 		if (bswapLE32(readDWord((void*)(p+nPos))) == 0x58464843)
 		{
 			printf("LoadMixPlugins 2a\n");							
