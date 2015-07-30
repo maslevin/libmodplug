@@ -1305,6 +1305,7 @@ UINT CSoundFile::ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR lpMemFile, 
 	case RS_IT21416:
 	case RS_IT2158:
 	case RS_IT21516:
+		printf("IT COMPRESSED SAMPLE : %u\n", dwMemLength);
 		len = dwMemLength;
 		if (len < 4) break;
 		if ((nFlags == RS_IT2148) || (nFlags == RS_IT2158))
