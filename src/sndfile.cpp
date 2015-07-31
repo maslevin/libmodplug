@@ -23,6 +23,8 @@ extern DWORD ITReadBits(DWORD &bitbuf, UINT &bitnum, LPBYTE &ibuf, CHAR n);
 extern void ITUnpack8Bit(signed char *pSample, DWORD dwLen, LPBYTE lpMemFile, DWORD dwMemLength, BOOL b215);
 extern void ITUnpack16Bit(signed char *pSample, DWORD dwLen, LPBYTE lpMemFile, DWORD dwMemLength, BOOL b215);
 
+extern WORD readWord(void* addr);
+extern DWORD readDWord(void* addr);
 
 #define MAX_PACK_TABLES		3
 
