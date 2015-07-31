@@ -1125,6 +1125,7 @@ UINT CSoundFile::ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR lpMemFile, 
 	// 1: 8-bit unsigned PCM data
 	case RS_PCM8U:
 		{
+			printf("RS_PCM8U\n");
 			len = pIns->nLength;
 			if (len > dwMemLength) len = pIns->nLength = dwMemLength;
 			signed char *pSample = pIns->pSample;
@@ -1135,6 +1136,7 @@ UINT CSoundFile::ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR lpMemFile, 
 	// 2: 8-bit ADPCM data with linear table
 	case RS_PCM8D:
 		{
+			printf("RS_PCM8D\n");			
 			len = pIns->nLength;
 			if (len > dwMemLength) break;
 			signed char *pSample = pIns->pSample;
@@ -1152,6 +1154,7 @@ UINT CSoundFile::ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR lpMemFile, 
 	// 3: 4-bit ADPCM data
 	case RS_ADPCM4:
 		{
+			printf("RS_ADPCM4\n");			
 			len = (pIns->nLength + 1) / 2;
 			if (len > dwMemLength - 16) break;
 			memcpy(CompressionTable, lpMemFile, 16);
@@ -1175,6 +1178,7 @@ UINT CSoundFile::ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR lpMemFile, 
 	// 4: 16-bit ADPCM data with linear table
 	case RS_PCM16D:
 		{
+			printf("RS_PCM16D\n");			
 			len = pIns->nLength * 2;
 			if (len > dwMemLength) break;
 			int16_t *pSample = (int16_t *)pIns->pSample;
@@ -1190,9 +1194,11 @@ UINT CSoundFile::ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR lpMemFile, 
 
 	// 5: 16-bit signed PCM data
 	case RS_PCM16S:
-	        {
-		len = pIns->nLength * 2;
-		if (len <= dwMemLength) memcpy(pIns->pSample, lpMemFile, len);
+        {
+			printf("RS_PCM16S\n");
+			len = pIns->nLength * 2;
+			if (len <= dwMemLength) memcpy(pIns->pSample, lpMemFile, len);
+
 			int16_t *pSample = (int16_t *)pIns->pSample;
 			for (UINT j=0; j<len; j+=2)
 			{
@@ -1204,6 +1210,7 @@ UINT CSoundFile::ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR lpMemFile, 
 
 	// 16-bit signed mono PCM motorola byte order
 	case RS_PCM16M:
+		printf("RS_PCM16M\n");
 		len = pIns->nLength * 2;
 		if (len > dwMemLength) len = dwMemLength & ~1;
 		if (len > 1)
@@ -1222,6 +1229,7 @@ UINT CSoundFile::ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR lpMemFile, 
 	// 6: 16-bit unsigned PCM data
 	case RS_PCM16U:
 		{
+			printf("RS_PCM16U\n");			
 			len = pIns->nLength * 2;
 			if (len > dwMemLength) break;
 			int16_t *pSample = (int16_t *)pIns->pSample;
@@ -1232,6 +1240,7 @@ UINT CSoundFile::ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR lpMemFile, 
 
 	// 16-bit signed stereo big endian
 	case RS_STPCM16M:
+		printf("RS_STPCM16M\n");	
 		len = pIns->nLength * 2;
 		if (len*2 <= dwMemLength)
 		{
@@ -1255,6 +1264,7 @@ UINT CSoundFile::ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR lpMemFile, 
 	case RS_STPCM8U:
 	case RS_STPCM8D:
 		{
+			printf("RS_STPCM8?\n");			
 			int iadd_l = 0, iadd_r = 0;
 			if (nFlags == RS_STPCM8U) { iadd_l = iadd_r = -128; }
 			len = pIns->nLength;
@@ -1281,6 +1291,7 @@ UINT CSoundFile::ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR lpMemFile, 
 	case RS_STPCM16U:
 	case RS_STPCM16D:
 		{
+			printf("RS_STPCM16?\n");						
 			int iadd_l = 0, iadd_r = 0;
 			if (nFlags == RS_STPCM16U) { iadd_l = iadd_r = -0x8000; }
 			len = pIns->nLength;
@@ -1307,6 +1318,7 @@ UINT CSoundFile::ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR lpMemFile, 
 	case RS_IT21416:
 	case RS_IT2158:
 	case RS_IT21516:
+		printf("RS_IT*\n");				
 		printf("IT COMPRESSED SAMPLE : %u\n", dwMemLength);
 		len = dwMemLength;
 		if (len < 4) break;
