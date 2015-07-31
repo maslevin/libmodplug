@@ -1305,9 +1305,9 @@ UINT CSoundFile::ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR lpMemFile, 
 			for (UINT j=0; j<len; j++)
 			{
 				printf("c.1\n");											
-				pSample[j*2] = (int16_t) (bswapLE16(readWord(psrc[0])) + iadd_l);
+				pSample[j*2] = (int16_t) (bswapLE16(readWord((void*)psrc)) + iadd_l);
 				printf("c.2\n");															
-				pSample[j*2+1] = (int16_t) (bswapLE16(readWord(psrc[len])) + iadd_r);
+				pSample[j*2+1] = (int16_t) (bswapLE16(readWord((void*)(psrc + len * 2))) + iadd_r);
 				printf("c.3\n");															
 				psrc++;
 				if (nFlags == RS_STPCM16D)
