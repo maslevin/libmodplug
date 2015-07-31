@@ -508,9 +508,9 @@ BOOL CSoundFile::ReadIT(const BYTE *lpStream, DWORD dwMemLength)
 						if (pis.flags & 4) flags |= RSF_STEREO;
 						if (pis.cvt == 0xFF) flags = RS_ADPCM4; else
 						// IT 2.14 8-bit packed sample ?
-						if (pis.flags & 8)	flags =	((pifh.cmwt >= 0x215) && (pis.cvt & 4)) ? RS_IT2158 : RS_IT2148;
+						if (pis.flags & 8) flags = ((pifh.cmwt >= 0x215) && (pis.cvt & 4)) ? RS_IT2158 : RS_IT2148;
 					}
-					printf("exit to ReadSample\n");
+					printf("exit to ReadSample \n");
 					ReadSample(&Ins[nsmp+1], flags, (LPSTR)(lpStream+pis.samplepointer), dwMemLength - pis.samplepointer);
 				}
 			}

@@ -1295,17 +1295,24 @@ UINT CSoundFile::ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR lpMemFile, 
 			int iadd_l = 0, iadd_r = 0;
 			if (nFlags == RS_STPCM16U) { iadd_l = iadd_r = -0x8000; }
 			len = pIns->nLength;
+			printf("a\n");
 			int16_t *psrc = (int16_t *)lpMemFile;
 			int16_t *pSample = (int16_t *)pIns->pSample;
+			printf("b\n");			
 			if (len*4 > dwMemLength) break;
 			for (UINT j=0; j<len; j++)
 			{
+				printf("c.1\n");											
 				pSample[j*2] = (int16_t) (bswapLE16(psrc[0]) + iadd_l);
+				printf("c.2\n");															
 				pSample[j*2+1] = (int16_t) (bswapLE16(psrc[len]) + iadd_r);
+				printf("c.3\n");															
 				psrc++;
 				if (nFlags == RS_STPCM16D)
 				{
+					printf("c.4\n");																
 					iadd_l = pSample[j*2];
+					printf("c.5\n");																
 					iadd_r = pSample[j*2+1];
 				}
 			}
