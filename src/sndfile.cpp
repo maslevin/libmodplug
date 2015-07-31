@@ -1097,6 +1097,7 @@ UINT CSoundFile::WriteSample(FILE *f, MODINSTRUMENT *pins, UINT nFlags, UINT nMa
 UINT CSoundFile::ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR lpMemFile, DWORD dwMemLength)
 //------------------------------------------------------------------------------
 {
+	printf("ReadSample entering\n");
 	UINT len = 0, mem = pIns->nLength+6;
 
 	// Disable >2Gb samples,(preventing buffer overflow in AllocateSample)
@@ -1118,6 +1119,7 @@ UINT CSoundFile::ReadSample(MODINSTRUMENT *pIns, UINT nFlags, LPCSTR lpMemFile, 
 		pIns->nLength = 0;
 		return 0;
 	}
+	printf("nFlags : %u\n", nFlags);
 	switch(nFlags)
 	{
 	// 1: 8-bit unsigned PCM data
